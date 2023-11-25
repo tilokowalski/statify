@@ -40,9 +40,13 @@ public class Track extends Record {
      * @param artists The artists of the track.
      */
     public Track(String recordId, String title, List<Artist> artists) {
-        super("track", recordId);
+        super(recordId);
         this.title = title;
         this.artists = artists;
     }
-    
+
+    @Override
+    public String getTableName() {
+        return "track";
+    }
 }

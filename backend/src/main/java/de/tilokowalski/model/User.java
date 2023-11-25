@@ -32,8 +32,13 @@ public class User extends Record {
      * @param name The name of the user.
      */
     public User(String recordId, String name) {
-        super("user", recordId);
+        super(recordId);
         this.name = name;
     }
-    
+
+
+    @Override
+    public String getTableName() {
+        return "user";
+    }
 }

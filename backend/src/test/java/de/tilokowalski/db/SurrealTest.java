@@ -7,6 +7,8 @@ import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
 import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.List;
+
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 
@@ -32,4 +34,9 @@ class SurrealTest {
         db.store(user);
     }
 
+    @Test
+    void get() {
+        var user = new User("detlef");
+        List<User> _users = db.get(user.getTableName(), User.class);
+    }
 }
