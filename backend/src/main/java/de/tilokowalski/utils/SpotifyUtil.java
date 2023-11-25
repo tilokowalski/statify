@@ -1,9 +1,7 @@
 package de.tilokowalski.utils;
 
-import jakarta.inject.Inject;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,6 +16,9 @@ import se.michaelthelin.spotify.model_objects.specification.User;
 import se.michaelthelin.spotify.requests.data.player.GetCurrentUsersRecentlyPlayedTracksRequest;
 import se.michaelthelin.spotify.requests.data.users_profile.GetCurrentUsersProfileRequest;
 
+/**
+ * The spotify util is used to fetch data from the spotify api.
+ */
 @Slf4j
 public class SpotifyUtil {
 
@@ -26,37 +27,28 @@ public class SpotifyUtil {
 
     private final String accesToken;
 
+    /**
+     * The spotify api is used to fetch data from the spotify api.
+     */
     private static SpotifyApi spotifyApi;
 
+    /**
+     * Creates a new spotify util.
+     *
+     * @param accesToken The access token.
+     */
     public SpotifyUtil(String accesToken) {
         this.accesToken = accesToken;
         initialize();
     }
 
     /**
-     * Initializes the Spotify Api Object.
+     * Initializes the spotify api.
      */
     public void initialize() {
         spotifyApi = new SpotifyApi.Builder()
             .setAccessToken(accesToken)
             .build();
-    }
-
-    /**
-     * Returns the current spotify user.
-     *
-     * @return User object
-     */
-    public User getUser() {
-        GetCurrentUsersProfileRequest profileRequest = spotifyApi.getCurrentUsersProfile()
-            .build();
-
-        try {
-            return profileRequest.execute();
-        } catch (IOException | SpotifyWebApiException | ParseException e) {
-            log.atError().setCause(e).log("Fehler beim fetchen der User Data");
-        }
-        return null;
     }
 
     /**
@@ -73,19 +65,39 @@ public class SpotifyUtil {
 
         try {
             final PagingCursorbased<PlayHistory> playHistoryPagingCursorbased = historyRequest.execute();
+
             return playHistoryPagingCursorbased.getItems();
         } catch (IOException | SpotifyWebApiException | ParseException e) {
             log.atError().setCause(e).log("Fehler beim fetchen der Play History");
         }
+
         return null;
     }
 
     /**
-     * Returns the Play History in given timespan.
+     * Fetches the user data from the spotify api.
      *
-     * @return PlayHistory[] with tracks
+     * @return The user data.
      */
-    public Map<String, Track> getPlayHistoryData30Days() {
+    public User getUser() {
+        GetCurrentUsersProfileRequest profileRequest = spotifyApi.getCurrentUsersProfile().build();
+
+        try {
+            return profileRequest.execute();
+        } catch (IOException | SpotifyWebApiException | ParseException e) {
+            log.atError().setCause(e).log("Fehler beim fetchen der User Data");
+        }
+
+        return null;
+    }
+
+    /**
+     * Fetches the play history data from the spotify api.
+     *
+     * @return The play history data.
+     * @throws NotImplementedException Not implemented yet.
+     */
+    public Map<String, Track> getPlayHistoryData30Days() throws NotImplementedException {
         LocalDateTime before;
         Map<String, Track> mappedHistory = new HashMap<>();
 

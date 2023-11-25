@@ -9,10 +9,18 @@
   },
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "next": "^14.0.3",
+  "peerDependencies": {
     "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "surrealdb.js": "^0.11.0"
+    "react-dom": "^18.2.0"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@fontsource/roboto": "^5.0.8",
+    "@mui/icons-material": "^5.14.18",
+    "@mui/material": "^5.14.18",
+    "next": "^14.0.3",
+    "surrealdb.js": "^0.11.0",
+    "universal-cookie": "^6.1.1"
   }
 }
