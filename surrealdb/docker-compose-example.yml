@@ -1,0 +1,16 @@
+services:
+    surrealdb:
+        env_file:
+            - .env.local
+        command:
+            - start
+            - file:/data/mydatabase.db
+        user: root:root
+        volumes:
+            - surrealdb:/data
+        image: surrealdb/surrealdb:latest
+        ports:
+            - 8000:8000
+
+volumes:
+    surrealdb:
