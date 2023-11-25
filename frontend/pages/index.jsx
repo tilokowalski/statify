@@ -25,11 +25,11 @@ export async function getServerSideProps(context) {
             //   	password: 'my-secret-password'
             // }
         });
-      } catch (e) {
+    } catch (e) {
         console.error('Error connecting to SurrealDB', e);
-      }
+    }
 
-      try {
+    try {
         const result = await DB.query(`
             LET $total = (SELECT count() AS count FROM (SELECT ->listens->track.artist.genre FROM user:xyz));
 
@@ -43,7 +43,7 @@ export async function getServerSideProps(context) {
             percentage: item.percentage.toFixed(2)
         }));
     } catch (e) {
-      console.error('Error querying SurrealDB', e);
+        console.error('Error querying SurrealDB', e);
     }
 
     return {
