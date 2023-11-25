@@ -1,37 +1,13 @@
-
-'use client';
-
 import { Button } from '@mui/material';
-import { useEffect, useState } from 'react';
+import currentToken from "../utils/token.js"
+import Login from './components/login.jsx';
+import Dashboard from './components/dashboard.jsx';
 
 export default function HomePage() {
-    const [isTokenValid, setIsTokenValid] = useState(false);
+  const isValid = currentToken.isValid();
 
-    useEffect(() => {
-        const checkToken = async () => {
-            const response = await fetch('/api/checkToken');
-            const { isValid } = await response.json();
-
-            setIsTokenValid(isValid);
-        };
-
-        checkToken();
-    });
-
-    if (isTokenValid) {
-        window.location.href = '/dashboard';
-    }
-
-    const redirectToSpotifyAuthorize = async () => {
-        const response = await fetch('/api/spotifyAuth', {
-            method: 'POST'
-        });
-        const { url } = await response.json();
-        
-        window.location.href = url;
-    };
-
-    return (
-        <Button variant="contained" onClick={redirectToSpotifyAuthorize}>Login via Spotify</Button>
-    );
+  if (!isValid) {
+    return (<Login></Login>);
+  }
+  return (<Dashboard></Dashboard>)
 }
