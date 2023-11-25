@@ -1,65 +1,59 @@
-import { useState } from 'react';
-import { Surreal } from 'surrealdb.js';
 
-const DB = new Surreal();
+import { useRouter } from 'next/router';
+import { Button } from '@mui/material';
+import { useEffect } from 'react';
+import currentToken from '../utils/token';
+import Cookies from 'universal-cookie';
 
-const DB_NAMESPACE = 'statify';
-const DB_DATABASE = 'statify';
+const cookies = new Cookies();
 
-const DB_ENDPOINT = 'ws://127.0.0.1:8000/rpc';
+const spotifyClientId = process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID;
 
-export async function getServerSideProps(context) {
+const spotifyAuthEndpoint = "https://accounts.spotify.com/authorize";
+const spotifyRedirectUri = 'http://localhost:3000/callback';
+const spotifyScope = 'user-read-private user-read-email';
 
-    let dbResult = null;
+async function redirectToSpotifyAuthorize() {
+    const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const randomValues = crypto.getRandomValues(new Uint8Array(64));
+    const randomString = randomValues.reduce((acc, x) => acc + possible[x % possible.length], "");
+  
+    const codeVerifier = randomString;
+    const data = new TextEncoder().encode(codeVerifier);
+    const hashed = await crypto.subtle.digest('SHA-256', data);
+  
+    const codeChallengeBase64 = btoa(String.fromCharCode(...new Uint8Array(hashed)))
+      .replace(/=/g, '')
+      .replace(/\+/g, '-')
+      .replace(/\//g, '_');
 
-    try {
-        await DB.connect(DB_ENDPOINT, {
-            namespace: DB_NAMESPACE,
-            database: DB_DATABASE,
+    cookies.set('code_verifier', codeVerifier, { path: '/' });
+  
+    const authUrl = new URL(spotifyAuthEndpoint)
 
-            // auth: {
-            //   	namespace: 'test',
-            //   	database: 'test',
-            //   	scope: 'user',
-            //   	username: 'info@surrealdb.com',
-            //   	password: 'my-secret-password'
-            // }
-        });
-    } catch (e) {
-        console.error('Error connecting to SurrealDB', e);
-    }
-
-    try {
-        const result = await DB.query(`
-            LET $total = (SELECT count() AS count FROM (SELECT ->listens->track.artist.genre FROM user:xyz));
-
-            SELECT genre, COUNT(*) * 100 / $total.count AS percentage FROM (
-                SELECT ->listens->track.artist.genre AS genre FROM user:xyz
-            ) GROUP BY genre;
-        `);
-
-        dbResult = result.map(item => ({
-            genre: item.genre,
-            percentage: item.percentage.toFixed(2)
-        }));
-    } catch (e) {
-        console.error('Error querying SurrealDB', e);
-    }
-
-    return {
-        props: {
-            dbResult
-        }
+    const params = {
+        response_type: 'code',
+        client_id: spotifyClientId,
+        scope: spotifyScope,
+        code_challenge_method: 'S256',
+        code_challenge: codeChallengeBase64,
+        redirect_uri: spotifyRedirectUri,
     };
+  
+    authUrl.search = new URLSearchParams(params).toString();
+    window.location.href = authUrl.toString();
 }
+  
+export default function HomePage() {
+    const router = useRouter();
 
-export default function HomePage({ dbResult }) {
+    useEffect(() => {
+        if (currentToken.isValid()) {
+            router.push('/dashboard');
+        }
+    }, [router]);
+
     return (
-        // <ul>
-        //     {dbResult.genres.map((genre) => (
-        //         <li key={genre}>{genre}</li>
-        //     ))}
-        // </ul>
-        
+        <Button variant="contained" onClick={redirectToSpotifyAuthorize}>Login via Spotify</Button>
     );
 }
