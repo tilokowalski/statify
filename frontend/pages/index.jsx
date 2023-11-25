@@ -1,70 +1,64 @@
 import { useState } from 'react';
 import { Surreal } from 'surrealdb.js';
 
-const db = new Surreal();
+const DB = new Surreal();
+
+const DB_NAMESPACE = 'statify';
+const DB_DATABASE = 'statify';
+
+const DB_ENDPOINT = 'ws://127.0.0.1:8000/rpc';
 
 export async function getServerSideProps(context) {
 
-  let genreData = null;
+    let dbResult = null;
 
-  try {
-		// Connect to the database
-		await db.connect('http://127.0.0.1:8000/rpc', {
-			// Set the namespace and database for the connection
-			namespace: 'statify',
-			database: 'statify',
+    try {
+        await DB.connect(DB_ENDPOINT, {
+            namespace: DB_NAMESPACE,
+            database: DB_DATABASE,
 
-			// Set the authentication details for the connection
-			// auth: {
-			// 	namespace: 'test',
-			// 	database: 'test',
-			// 	scope: 'user',
-			// 	username: 'info@surrealdb.com',
-			// 	password: 'my-secret-password',
-			// },
-		});
+            // auth: {
+            //   	namespace: 'test',
+            //   	database: 'test',
+            //   	scope: 'user',
+            //   	username: 'info@surrealdb.com',
+            //   	password: 'my-secret-password'
+            // }
+        });
+      } catch (e) {
+        console.error('Error connecting to SurrealDB', e);
+      }
 
-    // Updated query to calculate genre percentages
-    const result = await db.query(`
-    LET $total = (SELECT count() AS count FROM (SELECT ->listens->track.artist.genre FROM user:xyz));
-    SELECT genre, COUNT(*) * 100 / $total.count AS percentage FROM (
-      SELECT ->listens->track.artist.genre AS genre FROM user:xyz
-    ) GROUP BY genre;
-  `);
+      try {
+        const result = await DB.query(`
+            LET $total = (SELECT count() AS count FROM (SELECT ->listens->track.artist.genre FROM user:xyz));
 
-  genreData = result.map(item => ({
-    genre: item.genre,
-    percentage: item.percentage.toFixed(2)
-  }));
+            SELECT genre, COUNT(*) * 100 / $total.count AS percentage FROM (
+                SELECT ->listens->track.artist.genre AS genre FROM user:xyz
+            ) GROUP BY genre;
+        `);
 
-    console.log(genreData)
+        dbResult = result.map(item => ({
+            genre: item.genre,
+            percentage: item.percentage.toFixed(2)
+        }));
+    } catch (e) {
+      console.error('Error querying SurrealDB', e);
+    }
 
-	} catch (e) {
-		console.error('ERROR', e);
-	}
-  return {
-    props: {
-      genreData
-    },
-  };
+    return {
+        props: {
+            dbResult
+        }
+    };
 }
 
-export default function HomePage({ genreData }) {
-  const [likes, setLikes] = useState(0);
-
-  function handleClick() {
-    setLikes(likes + 1);
-  }
-
-  return (
-    <div>
-      <ul>
-        {/* {listensData.genres.map((genre) => (
-          <li key={genre}>{genre}</li>
-        ))} */}
-      </ul>
-
-      <button onClick={handleClick}>Like ({likes})</button>
-    </div>
-  );
+export default function HomePage({ dbResult }) {
+    return (
+        <ul>
+            {dbResult.genres.map((genre) => (
+                <li key={genre}>{genre}</li>
+            ))}
+        </ul>
+    );
 }
