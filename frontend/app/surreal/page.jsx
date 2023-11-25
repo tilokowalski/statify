@@ -1,3 +1,5 @@
+'use client';
+
 import { Surreal } from 'surrealdb.js';
 
 const DB = new Surreal();
@@ -54,11 +56,10 @@ export async function getServerSideProps(context) {
 
 export default function HomePage({ dbResult }) {
     return (
-        // <ul>
-        //     {dbResult.genres.map((genre) => (
-        //         <li key={genre}>{genre}</li>
-        //     ))}
-        // </ul>
-        
+        <ul>
+            {dbResult.genres.map((genre) => (
+                <li key={genre}>{genre}</li>
+            ))}
+        </ul>
     );
 }
