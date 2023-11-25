@@ -5,40 +5,68 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.surrealdb.connection.SurrealConnection;
 import com.surrealdb.connection.SurrealWebSocketConnection;
 import com.surrealdb.driver.SyncSurrealDriver;
-
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import lombok.extern.java.Log;
 
-@Singleton
+/**
+ * The surreal graph database connection, wrapped into a singleton object.
+ */
 @Log
+@Singleton
 public class Surreal {
 
-  private final SyncSurrealDriver driver;
+    /**
+     * The surreal driver is used to communicate with the surreal graph database.
+     */
+    private final SyncSurrealDriver driver;
 
-  @Inject
-  ObjectMapper mapper;
+    /**
+     * The object mapper is used to serialize relations.
+     */
+    @Inject
+    ObjectMapper mapper;
 
-  public Surreal() {
-    SurrealConnection connection = new SurrealWebSocketConnection("127.0.0.1", 8000, false);
-    connection.connect(30); // timeout after 30 seconds
+    /**
+     * Creates the surreal graph database connection.
+     */
+    private Surreal() {
+        SurrealConnection connection = new SurrealWebSocketConnection("127.0.0.1", 8000, false);
+        connection.connect(30); // timeout after 30 seconds
 
-    driver = new SyncSurrealDriver(connection);
+        driver = new SyncSurrealDriver(connection);
 
-    driver.signIn("root", "root"); // username & password
-    driver.use("statify", "statify"); // namespace & database
-  }
+        driver.signIn("root", "root"); // username & password
+        driver.use("statify", "statify"); // namespace & database
+    }
 
-  public void store(
-      Record record) {
-    driver.create(record.recordId(), record);
-  }
+    /**
+     * Stores a record in the surreal graph database.
+     *
+     * @param record The record to store.
+     */
+    public void store(Record record) {
+        driver.create(record.generateCreationIdentifier(), record);
+    }
 
-  public void relate(Relation relation)
-      throws JsonProcessingException {
-    String contentJson = mapper.writeValueAsString(relation);
-    var query = String.format("RELATE %s->%s->%s CONTENT %s", relation.in().recordId(), relation.relationName(), relation.out().recordId(), contentJson);
-    log.info(query);
-    driver.query(query, null, relation.getClass());
-  }
+    /**
+     * Relates two records in the surreal graph database.
+     *
+     * @param relation The relation to store.
+     * @throws JsonProcessingException If the relation could not be serialized.
+     */
+    public void relate(Relation<?, ?> relation) throws JsonProcessingException {
+        String contentJson = mapper.writeValueAsString(relation);
+
+        var query = String.format(
+            "RELATE %s->%s->%s CONTENT %s",
+            relation.in().generateCreationIdentifier(),
+            relation.relationName(),
+            relation.out().generateCreationIdentifier(),
+            contentJson
+        );
+
+        driver.query(query, null, relation.getClass());
+    }
+    
 }

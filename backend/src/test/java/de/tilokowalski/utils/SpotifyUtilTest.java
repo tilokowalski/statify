@@ -10,10 +10,12 @@ import org.junit.jupiter.api.Test;
 @QuarkusTest
 public class SpotifyUtilTest {
 
+    private static final String ACCESS_TOKEN = "BQADWPrt3Djt_3y9Wgh1XYvk-OfbGOuuzJwIBpMlbhaBuwl-ESuVqOfFssygvq3oh61lRvE6MJcxVNGSEPDaMPl-IvQy8CfVMD2efsQH9orL0kDAKc-VdigDjDYWQb67np93duwQyYIfgJy3_QcWJNTZEbl1uAv2qHVWIIzJ_ln4vlCLAa2aKsKAyZuArDtLoeNNveugxFc";
+
     private static SpotifyUtil spotifyUtil;
 
     public void init() {
-        spotifyUtil = new SpotifyUtil("BQADWPrt3Djt_3y9Wgh1XYvk-OfbGOuuzJwIBpMlbhaBuwl-ESuVqOfFssygvq3oh61lRvE6MJcxVNGSEPDaMPl-IvQy8CfVMD2efsQH9orL0kDAKc-VdigDjDYWQb67np93duwQyYIfgJy3_QcWJNTZEbl1uAv2qHVWIIzJ_ln4vlCLAa2aKsKAyZuArDtLoeNNveugxFc");
+        spotifyUtil = new SpotifyUtil(ACCESS_TOKEN);
     }
 
     @Test
@@ -34,10 +36,10 @@ public class SpotifyUtilTest {
         assertNotNull(spotifyUtil.getUser());
     }
 
-    @Test
-    @Disabled
-    public void getPlayHistoryData30Days() {
-        init();
-        assertNotNull(spotifyUtil.getPlayHistoryData30Days());
-    }
+    // @Test
+    // public void getPlayHistoryData30Days() {
+    //     init();
+    //     assertNotNull(spotifyUtil.getPlayHistoryData30Days());
+    // }
+    
 }
