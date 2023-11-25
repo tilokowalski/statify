@@ -1,7 +1,9 @@
 package de.tilokowalski.model;
 
+import lombok.Data;
+
+@Data
 public class User {
 
-  public User() {
-  }
+  String name;
 }
