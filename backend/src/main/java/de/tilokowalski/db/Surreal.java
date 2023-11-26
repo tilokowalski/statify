@@ -12,8 +12,10 @@ import lombok.extern.java.Log;
 /**
  * The surreal graph database connection, wrapped into a singleton object.
  */
-@Log
+import java.util.List;
+
 @Singleton
+@Log
 public class Surreal {
 
     /**
@@ -49,24 +51,34 @@ public class Surreal {
         driver.create(record.generateCreationIdentifier(), record);
     }
 
-    /**
-     * Relates two records in the surreal graph database.
-     *
-     * @param relation The relation to store.
-     * @throws JsonProcessingException If the relation could not be serialized.
-     */
-    public void relate(Relation<?, ?> relation) throws JsonProcessingException {
-        String contentJson = mapper.writeValueAsString(relation);
+  public <T extends Record> List<T> get(String tableName, String recordId, Class<T> recordType){
+    String record = tableName + ":" + recordId;
+    return driver.select(record, recordType);
+  }
 
-        var query = String.format(
-            "RELATE %s->%s->%s CONTENT %s",
-            relation.in().generateCreationIdentifier(),
-            relation.relationName(),
-            relation.out().generateCreationIdentifier(),
-            contentJson
-        );
 
-        driver.query(query, null, relation.getClass());
-    }
-    
+  public <T extends Record> List<T> get(String tableName, Class<T> recordType){
+    return driver.select(tableName, recordType);
+  }
+
+  /**
+   * Relates two records in the surreal graph database.
+   *
+   * @param relation The relation to store.
+   * @throws JsonProcessingException If the relation could not be serialized.
+   */
+  public void relate(Relation<?, ?> relation) throws JsonProcessingException {
+      String contentJson = mapper.writeValueAsString(relation);
+
+      var query = String.format(
+          "RELATE %s->%s->%s CONTENT %s",
+          relation.in().generateCreationIdentifier(),
+          relation.relationName(),
+          relation.out().generateCreationIdentifier(),
+          contentJson
+      );
+
+      driver.query(query, null, relation.getClass());
+  }
+
 }
