@@ -68,9 +68,8 @@ public class SpotifyUtil {
             return mapUserData(profileRequest.execute());
         } catch (IOException | SpotifyWebApiException | ParseException e) {
             log.atError().setCause(e).log("ERROR fetching user data");
+            throw new RuntimeException();
         }
-
-        return null;
     }
 
     /**
@@ -129,9 +128,8 @@ public class SpotifyUtil {
                 playHistoryPagingCursorbased.getItems());
         } catch (IOException | SpotifyWebApiException | ParseException e) {
             log.atError().setCause(e).log("Fehler beim fetchen der Play History");
+            throw new RuntimeException();
         }
-
-        return null;
     }
 
     /**
@@ -147,7 +145,7 @@ public class SpotifyUtil {
             artist = getArtistRequest.execute();
         } catch (IOException | SpotifyWebApiException | ParseException e) {
             log.atError().setCause(e).log("Fehler beim fetchen der User Data");
-            return null;
+            throw new RuntimeException();
         }
 
         return Arrays.asList(artist.getGenres());
