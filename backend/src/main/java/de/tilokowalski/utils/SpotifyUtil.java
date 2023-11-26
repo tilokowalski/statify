@@ -87,7 +87,6 @@ public class SpotifyUtil {
         while (today.minusDays(30).isBefore(playedAt)) {
             Pair<Cursor[], PlayHistory[]> pair = getPlayHistoryData(playedAt);
 
-            assert pair != null;
             playHistories = pair.getRight();
 
             for (PlayHistory playHistory : playHistories) {
@@ -128,7 +127,7 @@ public class SpotifyUtil {
                 playHistoryPagingCursorbased.getItems());
         } catch (IOException | SpotifyWebApiException | ParseException e) {
             log.atError().setCause(e).log("Fehler beim fetchen der Play History");
-            throw new RuntimeException();
+            throw new RuntimeException(e);
         }
     }
 
