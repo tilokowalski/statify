@@ -1,9 +1,10 @@
 package de.tilokowalski.model;
 
 import de.tilokowalski.db.Record;
-import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.List;
 
 /**
  * The track model is used to store track data.
@@ -11,6 +12,9 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Track extends Record {
+
+    private static final String TABLE_NAME = "track";
+
 
     /**
      * The title of the track.
@@ -25,28 +29,28 @@ public class Track extends Record {
     /**
      * Creates a new track.
      *
-     * @param title The title of the track.
+     * @param title   The title of the track.
      * @param artists The artists of the track.
      */
     public Track(String title, List<Artist> artists) {
-        this("", title, artists);
+        this(TABLE_NAME, title, artists);
     }
 
     /**
      * Creates a new track.
      *
      * @param recordId The record id.
-     * @param title The title of the track.
-     * @param artists The artists of the track.
+     * @param title    The title of the track.
+     * @param artists  The artists of the track.
      */
     public Track(String recordId, String title, List<Artist> artists) {
-        super(recordId);
+        super(TABLE_NAME + ":" + recordId);
         this.title = title;
         this.artists = artists;
     }
 
     @Override
     public String getTableName() {
-        return "track";
+        return TABLE_NAME;
     }
 }

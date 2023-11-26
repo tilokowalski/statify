@@ -11,6 +11,7 @@ import lombok.Getter;
 @Getter
 public class Artist extends Record {
 
+    private static final String TABLE_NAME = "artist";
     /**
      * The genres of the artist.
      */
@@ -19,12 +20,12 @@ public class Artist extends Record {
     String name;
 
     public Artist(String name) {
-        this("", name, null);
+        this(TABLE_NAME, name, null);
     }
 
 
     public Artist(String recordId, String name, List<String> genres) {
-        super(recordId);
+        super(TABLE_NAME + ":" + recordId);
         this.name = name;
         this.genres = genres;
     }
@@ -32,6 +33,6 @@ public class Artist extends Record {
 
     @Override
     public String getTableName() {
-        return "artist";
+        return TABLE_NAME;
     }
 }
