@@ -1,16 +1,15 @@
 package de.tilokowalski.utils;
 
-import de.tilokowalski.mapper.SpotifyDataMapper;
+import de.tilokowalski.model.Artist;
 import de.tilokowalski.model.Listens;
+import de.tilokowalski.model.Track;
 import de.tilokowalski.model.User;
 import java.io.IOException;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.TimeZone;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
@@ -31,7 +30,6 @@ import se.michaelthelin.spotify.requests.data.users_profile.GetCurrentUsersProfi
 @Slf4j
 public class SpotifyUtil {
 
-    private final SpotifyDataMapper spotifyDataMapper = new SpotifyDataMapper();
     private final String accesToken;
 
     /**
@@ -67,7 +65,7 @@ public class SpotifyUtil {
         GetCurrentUsersProfileRequest profileRequest = spotifyApi.getCurrentUsersProfile().build();
 
         try {
-            return spotifyDataMapper.mapUserData(profileRequest.execute());
+            return mapUserData(profileRequest.execute());
         } catch (IOException | SpotifyWebApiException | ParseException e) {
             log.atError().setCause(e).log("ERROR fetching user data");
         }
@@ -84,46 +82,31 @@ public class SpotifyUtil {
         List<Listens> listens = new ArrayList<>();
         LocalDateTime today = LocalDateTime.now();
 
+        PlayHistory[] playHistories;
+
         LocalDateTime playedAt = today;
         while (today.minusDays(30).isBefore(playedAt)) {
-            try {
-                listens.add(createListens(playedAt, today, user));
-            } catch (NullPointerException e){
-                log.atError().setCause(e).log("ERROR");
-                break;
-            }
-        }
-        return listens;
-    }
+            Pair<Cursor[], PlayHistory[]> pair = getPlayHistoryData(playedAt);
 
-    /**
-     * Returns the listens object for the relation.
-     *
-     * @return Listens object with data.
-     */
-    private Listens createListens(LocalDateTime playedAt, LocalDateTime today, User user) throws NullPointerException {
-        PlayHistory[] playHistories;
-        Pair<Cursor[], PlayHistory[]> pair = getPlayHistoryData(playedAt);
-        playHistories = pair.getRight();
-        for (PlayHistory playHistory : playHistories) {
-            playedAt = LocalDateTime.ofInstant(
-                Instant.ofEpochMilli(Long.parseLong(pair.getLeft()[0].getAfter())),
-                TimeZone.getDefault().toZoneId());
-            if (today.minusDays(30).isBefore(playedAt)) {
-                ArtistSimplified[] artists = playHistory.getTrack().getArtists();
-                Map<String, List<String>>
-                    artistGenres = new HashMap<>();
-                Arrays.stream(artists).forEach((artist) ->
-                    artistGenres.put(artist.getId(), getArtistGenres(artist.getId()))
-                );
-                return new Listens(user,
-                    spotifyDataMapper.mapPlayHistoryData(playHistory, artistGenres),
-                    playedAt);
-            } else {
+            assert pair != null;
+            playHistories = pair.getRight();
+
+            for (PlayHistory playHistory : playHistories) {
+                playedAt = LocalDateTime.ofInstant(
+                    Instant.ofEpochMilli(Long.parseLong(pair.getLeft()[0].getAfter())),
+                    TimeZone.getDefault().toZoneId());
+                if (today.minusDays(30).isBefore(playedAt)) {
+                    listens.add(new Listens(user, mapPlayHistoryData(playHistory), playedAt));
+                } else {
+                    break;
+                }
+            }
+            if (!today.minusDays(30).isBefore(playedAt)) {
                 break;
             }
         }
-        return null;
+
+        return listens;
     }
 
     /**
@@ -168,5 +151,21 @@ public class SpotifyUtil {
         }
 
         return Arrays.asList(artist.getGenres());
+    }
+
+    private Track mapPlayHistoryData(PlayHistory playHistory) {
+        ArtistSimplified[] artistSimplified = playHistory.getTrack().getArtists();
+        List<Artist> artists = new ArrayList<>();
+
+        for (ArtistSimplified simplifiedArtist : artistSimplified) {
+            Artist artist = new Artist(simplifiedArtist.getId(), simplifiedArtist.getName(),
+                getArtistGenres(simplifiedArtist.getId()));
+            artists.add(artist);
+        }
+        return new Track(playHistory.getTrack().getId(), playHistory.getTrack().getName(), artists);
+    }
+
+    private User mapUserData(se.michaelthelin.spotify.model_objects.specification.User user) {
+        return new User(user.getId(), user.getDisplayName());
     }
 }
