@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 @QuarkusTest
 public class SpotifyUtilTest {
 
-    private static final String ACCESS_TOKEN = "BQBBGUQLLTnm3Gu5fmSS4LYfNmje_lcvjZhKCu1rzRLtLftqXW5Thme5liabRN6lNDWPsUbZXA198ZIR9md4cx3dDEEiFInAtxWzeJaB7C7yYHBJHqZQkYmXMEyrerCGkJ_XzrF7FA_4LxS5dsp7vop9KX4e-0JQOtIAkKJVPIcmzkpSgYVIP1Li5cwiwtOKKSqSxNzsc10";
+    private static final String ACCESS_TOKEN = "BQAItNXaKX-tRLFfKCn3EnTpvikhopFJbFJXYARHpmYcE47eHmg5UbV2IVE-bL0hj1ZFJugAqbCE4kZIiDS9YKipm1NM9XzpjVrWFYM9dl_lxzytSzhXRMR-kDQ565defMdmHtf_VVMj5rsj_uSRmLp5-WQFBGWr3s4xVchW6dseuQpOyfikjJ3sLV4HpSaCotOV4MdTc-8";
 
     private static SpotifyUtil spotifyUtil;
 

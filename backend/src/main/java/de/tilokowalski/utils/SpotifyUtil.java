@@ -1,6 +1,5 @@
 package de.tilokowalski.utils;
 
-import de.tilokowalski.db.Relation;
 import de.tilokowalski.model.Artist;
 import de.tilokowalski.model.Listens;
 import de.tilokowalski.model.Track;
@@ -89,24 +88,21 @@ public class SpotifyUtil {
         while (today.minusDays(30).isBefore(playedAt)) {
             Pair<Cursor[], PlayHistory[]> pair = getPlayHistoryData(playedAt);
 
-            try {
-                playHistories = pair.getRight();
+            assert pair != null;
+            playHistories = pair.getRight();
 
-                for (PlayHistory playHistory : playHistories) {
-                    playedAt = LocalDateTime.ofInstant(
-                        Instant.ofEpochMilli(Long.parseLong(pair.getLeft()[0].getAfter())),
-                        TimeZone.getDefault().toZoneId());
-                    if (today.minusDays(30).isBefore(playedAt)) {
-                        listens.add(new Listens(user, mapPlayHistoryData(playHistory), playedAt));
-                    } else {
-                        break;
-                    }
-                }
-                if (!today.minusDays(30).isBefore(playedAt)) {
+            for (PlayHistory playHistory : playHistories) {
+                playedAt = LocalDateTime.ofInstant(
+                    Instant.ofEpochMilli(Long.parseLong(pair.getLeft()[0].getAfter())),
+                    TimeZone.getDefault().toZoneId());
+                if (today.minusDays(30).isBefore(playedAt)) {
+                    listens.add(new Listens(user, mapPlayHistoryData(playHistory), playedAt));
+                } else {
                     break;
                 }
-            } catch (NullPointerException e) {
-                log.atError().setCause(e).log("ERROR");
+            }
+            if (!today.minusDays(30).isBefore(playedAt)) {
+                break;
             }
         }
 
