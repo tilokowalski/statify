@@ -8,6 +8,7 @@ import de.tilokowalski.model.Artist;
 import de.tilokowalski.model.Listens;
 import de.tilokowalski.model.Track;
 import de.tilokowalski.model.User;
+import de.tilokowalski.util.ToString;
 import de.tilokowalski.utils.SpotifyUtil;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.InternalServerErrorException;
@@ -16,7 +17,7 @@ import jakarta.ws.rs.Path;
 import lombok.extern.java.Log;
 import org.jboss.resteasy.reactive.RestHeader;
 
-import java.time.LocalDateTime;
+import java.time.Duration;
 import java.util.List;
 
 @Path("/process")
@@ -33,44 +34,49 @@ public class ProcessResource {
         // store mapped data into database
         User currentUser = new User(userId);
         try {
-            List<User> users = db.get(new User().getTableName(), User.class);
+            List<User> users = db.get(currentUser, User.class);
             if (users.isEmpty()) {
                 db.store(currentUser);
             }
         } catch (SurrealException e) {
-            if (e instanceof SurrealRecordAlreadyExitsException) {
-                log.info("Record for user already exists:" + e.getCause());
+            if (!(e instanceof SurrealRecordAlreadyExitsException)) {
+                throw e;
             }
-            throw e;
+            log.info("Record for user already exists:" + ToString.createDump(currentUser));
         }
 
 
         SpotifyUtil spotify = new SpotifyUtil(accessToken);
-        List<Listens> trackListens = spotify.getPlayHistoryListens30Days(currentUser);
+        List<Listens> trackListens = spotify.getPlayHistoryListens(currentUser, Duration.ofDays(5));
 
         for (Listens listen : trackListens) {
             Track track = listen.out();
             try {
-                db.store(track);
-
                 db.relate(listen);
-            } catch (SurrealException e) {
-                if (e instanceof SurrealRecordAlreadyExitsException) {
-                    log.info("Record for track already exists:" + e.getCause());
-                }
-                throw new InternalServerErrorException(e.getMessage());
             } catch (JsonProcessingException e) {
                 throw new InternalServerErrorException(e.getMessage());
+            } catch (SurrealException e) {
+                log.warning("error relating listens: " + ToString.create(e));
+                throw new InternalServerErrorException(e);
             }
 
-            for (Artist artist: track.getArtists()) {
+            try {
+                db.store(track);
+            } catch (SurrealException e) {
+                if (!(e instanceof SurrealRecordAlreadyExitsException)) {
+                    throw new InternalServerErrorException(e.getMessage());
+                }
+                log.info("Record for track already exists: " + ToString.createDump(track));
+            }
+
+            for (Artist artist : track.getArtists()) {
                 try {
                     db.store(artist);
                 } catch (SurrealException e) {
-                    if (e instanceof SurrealRecordAlreadyExitsException) {
-                        log.info("Record for track already exists:" + e.getCause());
+                    if (!(e instanceof SurrealRecordAlreadyExitsException)) {
+                        throw new InternalServerErrorException(e.getMessage());
                     }
-                    throw new InternalServerErrorException(e.getMessage());
+                    log.info("Record for artist already exists: " + ToString.createDump(artist));
                 }
             }
         }

@@ -32,8 +32,6 @@ public class SpotifyUtilTest {
     // @Disabled
     public void getPlayHistoryListens30Days() {
         init();
-        List<Listens> listens = spotifyUtil.getPlayHistoryListens30Days(new User("1"));
-        System.out.println(listens);
-        assertNotNull(listens);
+        assertNotNull(spotifyUtil.getPlayHistoryListens(new User("1")));
     }
 }
