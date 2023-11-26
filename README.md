@@ -1,8 +1,14 @@
-# Statify - Spotify Analytics Platform
+<h1 align="center">
+    Statify - Spotify Analytics Platform
+</h1>
 
-## Project Overview
+<p align="center">
+    <img alt="Run Quarkus Tests with Maven" src="https://github.com/tilokowalski/statify/actions/workflows/quarkus-test.yml/badge.svg">
+</p>
 
-This project is a web platform for Spotify analytics, designed to provide users with insights into their listening habits. The platform offers features like top listened genres, artists, and a listening history calendar. Currently, we are working on MVP 1, which includes Spotify login integration and an overview of the proportional deviation of genres listened to in the last 30 days.
+<p align="center">
+    This project is a web platform for Spotify analytics, designed to provide users with insights into their listening habits. The platform offers features like top listened genres, artists, and a listening history calendar. Currently, we are working on MVP 1, which includes Spotify login integration and an overview of the proportional deviation of genres listened to in the last 30 days.
+</p>
 
 ## Technologies Used
 

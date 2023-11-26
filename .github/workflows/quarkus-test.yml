@@ -1,0 +1,26 @@
+name: Run Quarkus Tests with Maven
+
+on:
+    push:
+        branches: [ master ]
+        paths:
+            - 'backend/**'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code from Repository
+      uses: actions/checkout@v4
+
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: maven
+        
+    - name: 
+      run: |
+        cd backend
+        mvn quarkus:test
