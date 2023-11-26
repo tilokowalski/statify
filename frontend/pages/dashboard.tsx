@@ -29,7 +29,7 @@ export const getServerSideProps: GetServerSideProps<DashboardProps> = async (con
     const accessToken = context.req.cookies['access_token'];
 
     // const userId = userData.id;
-    const userId = "1"; // TODO: Remove after testing
+    const userId = "123456"; // TODO: Remove after testing
 
     const userData = await fetchUserData(accessToken);
     const genreData = await fetchGenreData(userId);
@@ -71,13 +71,12 @@ export async function fetchGenreData(userId: string) {
 
     try {
         const genres = await DB.query(`
-            LET $genres = SELECT VALUE array::flatten(->listens->track.artists.genres) as genres FROM ONLY $user_id;
-            SELECT * FROM array::distinct($genres);
+            SELECT VALUE array::group(->listens->track.artists.genres) FROM ONLY $user_id;
         `, { user_id: "user:" + userId });
 
         const genreData: any = [];
 
-        const promises = genres[1].map(async (genre: string) => {
+        const promises = genres[0].map(async (genre: string) => {
             let result = await DB.query(`
                 LET $genres = SELECT VALUE array::flatten(->listens->track.artists.genres) as genres FROM ONLY $user_id;
                 
