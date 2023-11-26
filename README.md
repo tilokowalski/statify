@@ -3,10 +3,6 @@
 </h1>
 
 <p align="center">
-    <img alt="Run Quarkus Tests with Maven" src="https://github.com/tilokowalski/statify/actions/workflows/quarkus-test.yml/badge.svg">
-</p>
-
-<p align="center">
     This project is a web platform for Spotify analytics, designed to provide users with insights into their listening habits. The platform offers features like top listened genres, artists, and a listening history calendar. Currently, we are working on MVP 1, which includes Spotify login integration and an overview of the proportional deviation of genres listened to in the last 30 days.
 </p>
 
@@ -38,20 +34,20 @@
 2. Navigate to the project directory: `cd statify`
 3. Create environment variable files named `.env.local` in `frontend` and `surrealdb`, comply to the respective structure from the example `.env` files.
 
-4. Set up the backend:
+4. Run the Docker container for the development database:
+    ```
+    cd surrealdb
+    ./start.sh
+    ```
+5. Set up the backend:
     ```
     cd backend
     ./mvnw quarkus:dev
     ```
-5. Set up the frontend:
+6. Set up the frontend:
     ```
     cd frontend
     npm run dev
-    ```
-6. Run the Docker container for the development database:
-    ```
-    cd surrealdb
-    ./start.sh
     ```
 
 ## Usage
