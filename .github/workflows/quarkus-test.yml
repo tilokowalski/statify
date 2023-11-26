@@ -3,7 +3,9 @@ name: Run Quarkus Tests with Maven
 on:
     push:
         branches: [ master ]
-        
+        paths:
+            - backend/**
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -19,7 +21,7 @@ jobs:
         distribution: 'temurin'
         cache: maven
         
-    - name: 
+    - name: Execute Quarkus Tests
       run: |
         cd backend
         mvn quarkus:test
