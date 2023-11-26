@@ -8,6 +8,7 @@ import de.tilokowalski.model.Artist;
 import de.tilokowalski.model.Listens;
 import de.tilokowalski.model.Track;
 import de.tilokowalski.model.User;
+import de.tilokowalski.utils.SpotifyUtil;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.InternalServerErrorException;
 import jakarta.ws.rs.POST;
@@ -44,10 +45,8 @@ public class ProcessResource {
         }
 
 
-        Artist artist1 = new Artist("123", "pimmelgesicht", List.of("HipHop", "rap"));
-        Track track1 =  new Track("456", "test", List.of(artist1));
-
-        List<Listens> trackListens = List.of(new Listens(currentUser,track1, LocalDateTime.now()));
+        SpotifyUtil spotify = new SpotifyUtil(accessToken);
+        List<Listens> trackListens = spotify.getPlayHistoryListens30Days(currentUser);
 
         for (Listens listen : trackListens) {
             Track track = listen.out();
