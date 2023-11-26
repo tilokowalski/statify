@@ -53,4 +53,4 @@ This project is a web platform for Spotify analytics, designed to provide users 
 After setting up the project, users can log in using their Spotify account. The dashboard provides an overview of the genres they've listened to in the past 30 days and their proportional deviations.
 
 ## License
-This project is licensed under Apache 2.0 - see the [LICENSE] file for details.
+This project is licensed under Apache 2.0 - see [LICENSE](LICENSE) for details.
