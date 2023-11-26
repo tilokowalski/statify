@@ -3,8 +3,7 @@ name: Run Quarkus Tests with Maven
 on:
     push:
         branches: [ master ]
-        paths:
-            - 'backend/**'
+        
 jobs:
   build:
     runs-on: ubuntu-latest
