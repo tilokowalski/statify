@@ -28,6 +28,6 @@ public class SpotifyDataMapper {
     }
 
     public User mapUserData(se.michaelthelin.spotify.model_objects.specification.User user) {
-        return new User(user.getId(), user.getDisplayName());
+        return new User(user.getId());
     }
 }
