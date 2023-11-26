@@ -8,11 +8,8 @@ import de.tilokowalski.utils.SpotifyUtil;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.MediaType;
 import lombok.extern.java.Log;
 import org.jboss.resteasy.reactive.RestHeader;
-import org.jboss.resteasy.reactive.RestQuery;
 
 @Path("/user")
 @Log
@@ -20,7 +17,7 @@ public class UserResource {
   @Inject
   Surreal db;
   @GET
-  public se.michaelthelin.spotify.model_objects.specification.User getUserInformation(@RestHeader("Authorization") String accessToken) {
+  public User getUserInformation(@RestHeader("Authorization") String accessToken) {
     SpotifyUtil spotify = new SpotifyUtil(accessToken);
     try {
       // TODO: use mapping for spotify user to our user

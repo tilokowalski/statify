@@ -19,13 +19,14 @@ public class Artist extends Record {
     String name;
 
     public Artist(String name) {
-        this("", name);
+        this("", name, null);
     }
 
 
-    public Artist(String recordId, String name) {
+    public Artist(String recordId, String name, List<String> genres) {
         super(recordId);
         this.name = name;
+        this.genres = genres;
     }
 
 
