@@ -14,18 +14,21 @@
     "react-dom": "^18.2.0"
   },
   "dependencies": {
-    "@emotion/react": "^11.11.1",
-    "@emotion/styled": "^11.11.0",
     "@fontsource/roboto": "^5.0.8",
-    "@mui/icons-material": "^5.14.18",
     "@mui/material": "^5.14.18",
     "next": "^14.0.3",
+    "recharts": "^2.10.1",
     "surrealdb.js": "^0.11.0",
     "surrealdb.node": "^0.3.0",
     "universal-cookie": "^6.1.1"
   },
   "devDependencies": {
-    "@mui/x-charts": "^6.18.2"
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@mui/icons-material": "^5.14.18",
+    "@mui/x-charts": "^6.18.2",
+    "@types/node": "20.10.0",
+    "typescript": "5.3.2"
   },
   "optionalDependencies": {
     "bufferutil": "^4.0.8"

@@ -2,9 +2,8 @@
 'use server';
 
 import currentToken from "../../utils/token.js"
-import { Drawer, List, ListItem, Typography } from '@mui/material';
+import Genres from "./genres.jsx";
 import User from "./user.jsx";
-import GenrePieChart from "./surreal.jsx";
 
 async function getUserData() {
   const res = await fetch("https://api.spotify.com/v1/me", {
@@ -22,13 +21,13 @@ async function getUserData() {
   return { userData: await res.json() }
 }
 
-export default async function Dashboard() {
+export default async function Overview() {
   const { userData } = await getUserData()
 
   return (
     <div>
       <User userData={userData} />
-      <GenrePieChart />
+      <Genres userId={userData.id} />
     </div>
   );
 }

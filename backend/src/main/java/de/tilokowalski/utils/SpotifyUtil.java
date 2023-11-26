@@ -85,6 +85,7 @@ public class SpotifyUtil {
 
         LocalDateTime playedAt = today;
         while (today.minusDays(30).isBefore(playedAt)) {
+            System.out.println("ich bin ein while loop");
             Pair<Cursor[], PlayHistory[]> pair = getPlayHistoryData(playedAt);
 
             playHistories = pair.getRight();

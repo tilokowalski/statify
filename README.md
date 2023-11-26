@@ -52,7 +52,7 @@
 
 ## Usage
 
-After setting up the project, users can log in using their Spotify account. The dashboard provides an overview of the genres they've listened to in the past 30 days and their proportional deviations.
+After setting up the project, users can log in using their Spotify account. The overview provides an overview of the genres they've listened to in the past 30 days and their proportional deviations.
 
 ## License
 This project is licensed under Apache 2.0 - see [LICENSE](LICENSE) for details.

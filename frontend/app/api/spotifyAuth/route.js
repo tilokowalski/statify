@@ -7,7 +7,7 @@ const spotifyClientId = process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID;
 
 const spotifyAuthEndpoint = "https://accounts.spotify.com/authorize";
 const spotifyRedirectUri = 'http://localhost:3000/callback';
-const spotifyScope = 'user-read-private user-read-email';
+const spotifyScope = 'user-read-private user-read-email user-read-recently-played';
 
 export async function POST() {
   const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
