@@ -48,7 +48,7 @@ public class Surreal {
      * @param record The record to store.
      */
     public Record store(Record record) {
-        return driver.create(record.getTableName(), record);
+        return driver.create(record.getRecordIdentifier(), record);
     }
 
     public <T extends Record> List<T> get(String tableName, Class<T> recordType) {
@@ -60,6 +60,9 @@ public class Surreal {
         return driver.select(tableName + ":" + recordId, recordType);
     }
 
+    public <T extends Record> List<T> get(T record, Class<T> recordType) {
+        return driver.select(record.getRecordIdentifier(), recordType);
+    }
 
     /**
      * Relates two records in the surreal graph database.
@@ -72,9 +75,9 @@ public class Surreal {
 
         var query = String.format(
                 "RELATE %s->%s->%s CONTENT %s",
-                relation.in().getId(),
+                relation.in().getRecordIdentifier(),
                 relation.relationName(),
-                relation.out().getId(),
+                relation.out().getRecordIdentifier(),
                 contentJson
         );
 

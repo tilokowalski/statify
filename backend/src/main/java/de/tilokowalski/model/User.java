@@ -27,12 +27,7 @@ public class User extends Record {
      * @param recordId The record id.
      */
     public User(String recordId) {
-        super(TABLE_NAME+":"+recordId);
+        super(TABLE_NAME, recordId);
     }
 
-
-    @Override
-    public String getTableName() {
-        return TABLE_NAME;
-    }
 }

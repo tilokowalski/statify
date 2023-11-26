@@ -4,6 +4,7 @@ import de.tilokowalski.db.Record;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -26,14 +27,9 @@ public class Track extends Record {
      */
     List<Artist> artists;
 
-    /**
-     * Creates a new track.
-     *
-     * @param title   The title of the track.
-     * @param artists The artists of the track.
-     */
-    public Track(String title, List<Artist> artists) {
-        this(TABLE_NAME, title, artists);
+
+    public Track(String recordId, String title) {
+        this(recordId, title, new ArrayList<>());
     }
 
     /**
@@ -44,13 +40,12 @@ public class Track extends Record {
      * @param artists  The artists of the track.
      */
     public Track(String recordId, String title, List<Artist> artists) {
-        super(TABLE_NAME + ":" + recordId);
+        super(TABLE_NAME, recordId);
         this.title = title;
         this.artists = artists;
     }
 
-    @Override
-    public String getTableName() {
-        return TABLE_NAME;
+    public void addArtists(Artist artist) {
+        artists.add(artist);
     }
 }
