@@ -1,19 +1,45 @@
-"use client"
 
+'use client';
+
+import { useState } from 'react';
 import { Button } from '@mui/material';
 
-export default function Login() {
-  const redirectToSpotifyAuthorize = async () => {
-    const response = await fetch('/api/spotifyAuth', {
-      method: 'POST'
-    });
-    const { url } = await response.json();
+const baseUrl = process.env.NEXT_PUBLIC_APPLICATION_BASE_URL;
 
-    window.location.href = url;
-  };
-  return (
-    <Button variant="contained" onClick={async () => {
-      await redirectToSpotifyAuthorize();
-    }}>Login via Spotify</Button>
-  );
+export default function Login() {
+    const [isRedirecting, setIsRedirecting] = useState(false);
+
+    const redirectToSpotifyAuthorize = async () => {
+        setIsRedirecting(true);
+
+        try {
+            const response = await fetch(baseUrl + '/api/spotifyAuth', {
+                method: 'POST'
+            });
+            const { url } = await response.json();
+
+            window.location.href = url;
+        } catch (error) {
+            console.error('Error redirecting to Spotify:', error);
+            setIsRedirecting(false);
+        }
+    };
+
+    return (
+        <div style={{ 
+            display: 'flex', 
+            justifyContent: 'center', 
+            alignItems: 'center', 
+            height: '90vh' 
+          }}
+        >
+            <Button 
+                variant="contained" 
+                onClick={redirectToSpotifyAuthorize}
+                disabled={isRedirecting}
+            >
+                {isRedirecting ? 'Redirecting...' : 'Login via Spotify'}
+            </Button>
+        </div>
+    );
 }

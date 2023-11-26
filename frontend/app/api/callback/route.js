@@ -3,7 +3,6 @@
 
 import { cookies } from 'next/headers';
 import currentToken from '../../../utils/token';
-import { redirect } from 'next/navigation';
 
 const spotifyClientId = process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID;
 
@@ -27,7 +26,7 @@ export async function POST(request) {
 
     if (!isValid) throw new Error('Invalid token');
 
-    redirect("/")
+    return Response.json({ success: true });
   } catch (error) {
     return Response.json({ error: error }, { status: 400 });
   }

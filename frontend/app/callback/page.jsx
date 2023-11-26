@@ -1,17 +1,37 @@
+
 'use client';
 
+import { CircularProgress, Typography } from "@mui/material";
 import { useSearchParams } from "next/navigation";
-import { useEffect } from 'react';
+import { useEffect } from "react";
 
-export default async function Callback() {
-  const searchParams = useSearchParams();
-  const code = searchParams.get('code');
+const baseUrl = process.env.NEXT_PUBLIC_APPLICATION_BASE_URL;
 
-  const response = await fetch('/api/callback?code=' + code, {
-    method: 'POST'
-  });
+export default function Callback() {
+    const searchParams = useSearchParams();
 
-  window.location.href = '/';
+    const code = searchParams.get('code');
 
-  return null;
+    useEffect(async () => {
+        await fetch(baseUrl + '/api/callback?code=' + code, {
+            method: 'POST'
+        });
+        
+        window.location.href = "/"
+    });
+
+    return (
+        <div style={{ 
+            display: 'flex', 
+            justifyContent: 'center', 
+            alignItems: 'center', 
+            height: '90vh' 
+          }}
+        >
+            <Typography variant="h6" component="div" style={{ marginBottom: "20px" }}>
+                Please wait while we log you in...
+            </Typography>
+            <CircularProgress />
+        </div>
+    );
 }
