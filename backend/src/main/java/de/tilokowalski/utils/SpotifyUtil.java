@@ -68,7 +68,7 @@ public class SpotifyUtil {
         try {
             return mapUserData(profileRequest.execute());
         } catch (IOException | SpotifyWebApiException | ParseException e) {
-            log.atError().setCause(e).log("Fehler beim fetchen der User Data");
+            log.atError().setCause(e).log("ERROR fetching user data");
         }
 
         return null;
@@ -88,25 +88,25 @@ public class SpotifyUtil {
         LocalDateTime playedAt = today;
         while (today.minusDays(30).isBefore(playedAt)) {
             Pair<Cursor[], PlayHistory[]> pair = getPlayHistoryData(playedAt);
-            if (pair.getLeft().length == 0) {
-                log.atWarn().log("Cursor is null");
-                break;
-            }
 
-            playHistories = pair.getRight();
+            try {
+                playHistories = pair.getRight();
 
-            for (PlayHistory playHistory : playHistories) {
-                playedAt = LocalDateTime.ofInstant(
-                    Instant.ofEpochMilli(Long.parseLong(pair.getLeft()[0].getAfter())),
-                    TimeZone.getDefault().toZoneId());
-                if (today.minusDays(30).isBefore(playedAt)) {
-                    listens.add(new Listens(user, mapPlayHistoryData(playHistory), playedAt));
-                } else {
+                for (PlayHistory playHistory : playHistories) {
+                    playedAt = LocalDateTime.ofInstant(
+                        Instant.ofEpochMilli(Long.parseLong(pair.getLeft()[0].getAfter())),
+                        TimeZone.getDefault().toZoneId());
+                    if (today.minusDays(30).isBefore(playedAt)) {
+                        listens.add(new Listens(user, mapPlayHistoryData(playHistory), playedAt));
+                    } else {
+                        break;
+                    }
+                }
+                if (!today.minusDays(30).isBefore(playedAt)) {
                     break;
                 }
-            }
-            if (!today.minusDays(30).isBefore(playedAt)) {
-                break;
+            } catch (NullPointerException e) {
+                log.atError().setCause(e).log("ERROR");
             }
         }
 
