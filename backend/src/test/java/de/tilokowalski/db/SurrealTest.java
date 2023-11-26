@@ -21,7 +21,7 @@ class SurrealTest {
     @Test
     @SneakyThrows
     void relate() {
-        var user = new User("1", "herbert");
+        var user = new User("1");
         var track = new Track("1", "1", Collections.emptyList());
         var listens = new Listens(user, track, LocalDateTime.now());
 

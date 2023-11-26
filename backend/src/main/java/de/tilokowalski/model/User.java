@@ -11,34 +11,28 @@ import lombok.Setter;
 @Setter
 public class User extends Record {
 
-    /**
-     * The name of the user.
-     */
-    String name;
-
+    private static final String TABLE_NAME = "user";
     /**
      * Creates a new user.
      *
-     * @param name The name of the user.
      */
-    public User(String name) {
-        this("", name);
+    public User() {
+        this(TABLE_NAME);
     }
+
 
     /**
      * Creates a new user.
      *
      * @param recordId The record id.
-     * @param name The name of the user.
      */
-    public User(String recordId, String name) {
-        super(recordId);
-        this.name = name;
+    public User(String recordId) {
+        super(TABLE_NAME+":"+recordId);
     }
 
 
     @Override
     public String getTableName() {
-        return "user";
+        return TABLE_NAME;
     }
 }

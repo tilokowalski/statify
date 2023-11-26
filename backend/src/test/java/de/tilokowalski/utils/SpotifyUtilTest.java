@@ -3,6 +3,7 @@ package de.tilokowalski.utils;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
+import de.tilokowalski.model.User;
 import io.quarkus.test.junit.QuarkusTest;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -10,7 +11,7 @@ import org.junit.jupiter.api.Test;
 @QuarkusTest
 public class SpotifyUtilTest {
 
-    private static final String ACCESS_TOKEN = "BQADWPrt3Djt_3y9Wgh1XYvk-OfbGOuuzJwIBpMlbhaBuwl-ESuVqOfFssygvq3oh61lRvE6MJcxVNGSEPDaMPl-IvQy8CfVMD2efsQH9orL0kDAKc-VdigDjDYWQb67np93duwQyYIfgJy3_QcWJNTZEbl1uAv2qHVWIIzJ_ln4vlCLAa2aKsKAyZuArDtLoeNNveugxFc";
+    private static final String ACCESS_TOKEN = "BQBBGUQLLTnm3Gu5fmSS4LYfNmje_lcvjZhKCu1rzRLtLftqXW5Thme5liabRN6lNDWPsUbZXA198ZIR9md4cx3dDEEiFInAtxWzeJaB7C7yYHBJHqZQkYmXMEyrerCGkJ_XzrF7FA_4LxS5dsp7vop9KX4e-0JQOtIAkKJVPIcmzkpSgYVIP1Li5cwiwtOKKSqSxNzsc10";
 
     private static SpotifyUtil spotifyUtil;
 
@@ -19,27 +20,15 @@ public class SpotifyUtilTest {
     }
 
     @Test
-    public void getPlayHistoryDataTest() {
-        init();
-        assertNotNull(spotifyUtil.getPlayHistoryData());
-    }
-
-    @Test
-    public void getPlayHistoryDataUnauthorizedTest() {
-        SpotifyUtil spotifyUtil = new SpotifyUtil("WRONG_ID");
-        assertNull(spotifyUtil.getPlayHistoryData());
-    }
-
-    @Test
-    public void getUserIdTest() {
+    public void getUserTest() {
         init();
         assertNotNull(spotifyUtil.getUser());
     }
 
-    // @Test
-    // public void getPlayHistoryData30Days() {
-    //     init();
-    //     assertNotNull(spotifyUtil.getPlayHistoryData30Days());
-    // }
-    
+    @Test
+    @Disabled
+    public void getPlayHistoryListens30Days() {
+        init();
+        assertNotNull(spotifyUtil.getPlayHistoryListens30Days(new User("1", "User")));
+    }
 }

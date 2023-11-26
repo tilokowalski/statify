@@ -44,7 +44,7 @@ public abstract class Relation<T extends Record, R extends Record> {
      *
      * @return The incoming side of the relation.
      */
-    protected T in() {
+    public T in() {
         return in;
     }
 
@@ -53,7 +53,7 @@ public abstract class Relation<T extends Record, R extends Record> {
      *
      * @return The outgoing side of the relation.
      */
-    protected R out() {
+    public R out() {
         return out;
     }
 

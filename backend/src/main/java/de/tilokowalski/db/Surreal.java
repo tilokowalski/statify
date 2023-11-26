@@ -47,38 +47,38 @@ public class Surreal {
      *
      * @param record The record to store.
      */
-    public void store(Record record) {
-        driver.create(record.generateCreationIdentifier(), record);
+    public Record store(Record record) {
+        return driver.create(record.getTableName(), record);
     }
 
-  public <T extends Record> List<T> get(String tableName, String recordId, Class<T> recordType){
-    String record = tableName + ":" + recordId;
-    return driver.select(record, recordType);
-  }
+    public <T extends Record> List<T> get(String tableName, Class<T> recordType) {
+        return driver.select(tableName, recordType);
+    }
 
 
-  public <T extends Record> List<T> get(String tableName, Class<T> recordType){
-    return driver.select(tableName, recordType);
-  }
+    public <T extends Record> List<T> get(String tableName, String recordId, Class<T> recordType) {
+        return driver.select(tableName + ":" + recordId, recordType);
+    }
 
-  /**
-   * Relates two records in the surreal graph database.
-   *
-   * @param relation The relation to store.
-   * @throws JsonProcessingException If the relation could not be serialized.
-   */
-  public void relate(Relation<?, ?> relation) throws JsonProcessingException {
-      String contentJson = mapper.writeValueAsString(relation);
 
-      var query = String.format(
-          "RELATE %s->%s->%s CONTENT %s",
-          relation.in().generateCreationIdentifier(),
-          relation.relationName(),
-          relation.out().generateCreationIdentifier(),
-          contentJson
-      );
+    /**
+     * Relates two records in the surreal graph database.
+     *
+     * @param relation The relation to store.
+     * @throws JsonProcessingException If the relation could not be serialized.
+     */
+    public void relate(Relation<?, ?> relation) throws JsonProcessingException {
+        String contentJson = mapper.writeValueAsString(relation);
 
-      driver.query(query, null, relation.getClass());
-  }
+        var query = String.format(
+                "RELATE %s->%s->%s CONTENT %s",
+                relation.in().getId(),
+                relation.relationName(),
+                relation.out().getId(),
+                contentJson
+        );
+
+        driver.query(query, null, relation.getClass());
+    }
 
 }

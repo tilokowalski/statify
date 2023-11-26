@@ -26,3 +26,9 @@ RELATE user:4->listens->track:4 SET played_at=time::now();
 RELATE user:1->listens->track:5 SET played_at=time::now();
 RELATE user:2->listens->track:6 SET played_at=time::now();
 RELATE user:3->listens->track:7 SET played_at=time::now();
+
+# query for genre percentage
+LET $genres = SELECT VALUE array::flatten(->listens->track.artists.genres) as genres FROM ONLY user:1;
+
+SELECT array::len(genre_filter) as number_of_tracks_per_genre, <float> array::len(genre_filter) / count(genres) as percentage FROM ONLY {genre_filter: array::filter_index($genres, "hiphop"), genres: $genres};
+
