@@ -26,20 +26,12 @@ export default function Login() {
     };
 
     return (
-        <div style={{ 
-            display: 'flex', 
-            justifyContent: 'center', 
-            alignItems: 'center', 
-            height: '90vh' 
-          }}
+        <Button 
+            variant="contained" 
+            onClick={redirectToSpotifyAuthorize}
+            disabled={isRedirecting}
         >
-            <Button 
-                variant="contained" 
-                onClick={redirectToSpotifyAuthorize}
-                disabled={isRedirecting}
-            >
-                {isRedirecting ? 'Redirecting...' : 'Login via Spotify'}
-            </Button>
-        </div>
+            {isRedirecting ? 'Redirecting...' : 'Login via Spotify'}
+        </Button>
     );
 }

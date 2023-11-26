@@ -1,7 +1,7 @@
 
 'use client';
 
-import { CircularProgress, Typography } from "@mui/material";
+import { CircularProgress } from "@mui/material";
 import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 
@@ -21,16 +21,7 @@ export default function Callback() {
     });
 
     return (
-        <div style={{ 
-            display: 'flex', 
-            justifyContent: 'center', 
-            alignItems: 'center', 
-            height: '90vh' 
-          }}
-        >
-            <Typography variant="h6" component="div" style={{ marginBottom: "20px" }}>
-                Please wait while we log you in...
-            </Typography>
+        <div>
             <CircularProgress />
         </div>
     );

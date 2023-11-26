@@ -25,14 +25,6 @@ export default async function Dashboard() {
     const { userData } = await getUserData()
 
     return (
-        <div style={{ 
-            display: 'flex', 
-            justifyContent: 'center', 
-            alignItems: 'center', 
-            height: '90vh' 
-        }}
-        >
-            <User userData={userData} />
-        </div>
+        <User userData={userData} />
     );
 }
