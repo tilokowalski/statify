@@ -10,27 +10,27 @@ import org.junit.jupiter.api.Test;
 @QuarkusTest
 public class SpotifyUtilTest {
 
-    private static final String ACCESS_TOKEN = "BQADWPrt3Djt_3y9Wgh1XYvk-OfbGOuuzJwIBpMlbhaBuwl-ESuVqOfFssygvq3oh61lRvE6MJcxVNGSEPDaMPl-IvQy8CfVMD2efsQH9orL0kDAKc-VdigDjDYWQb67np93duwQyYIfgJy3_QcWJNTZEbl1uAv2qHVWIIzJ_ln4vlCLAa2aKsKAyZuArDtLoeNNveugxFc";
+    private static final String ACCESS_TOKEN = "BQDWAPFIr3x-la1Zh0XgyJ6TLXlGO1U0MADSdiZbOJBXbZTSfGE5xPi9CfyV1WQu12EKHNt1dNo4aIlBMX2GuKL7-8cNhAxAa3gxdGgE13WVkPhuEedQ_GHv5VEHYQKXHlC5lRMRkJGVv51cA8VyxLQri1WjaqfogoFW6GP5an6uK7K_5eFKxpAwHqJ7tyHnSjuFI3XK7D0";
 
     private static SpotifyUtil spotifyUtil;
 
     public void init() {
-        spotifyUtil = new SpotifyUtil("BQADWPrt3Djt_3y9Wgh1XYvk-OfbGOuuzJwIBpMlbhaBuwl-ESuVqOfFssygvq3oh61lRvE6MJcxVNGSEPDaMPl-IvQy8CfVMD2efsQH9orL0kDAKc-VdigDjDYWQb67np93duwQyYIfgJy3_QcWJNTZEbl1uAv2qHVWIIzJ_ln4vlCLAa2aKsKAyZuArDtLoeNNveugxFc");
+        spotifyUtil = new SpotifyUtil(ACCESS_TOKEN);
     }
 
-    @Test
-    @Disabled
-    public void getPlayHistoryDataTest() {
-        init();
-        assertNotNull(spotifyUtil.getPlayHistoryData());
-    }
-
-    @Test
-    @Disabled
-    public void getPlayHistoryDataUnauthorizedTest() {
-        SpotifyUtil spotifyUtil = new SpotifyUtil("WRONG_ID");
-        assertNull(spotifyUtil.getPlayHistoryData());
-    }
+//    @Test
+//    @Disabled
+//    public void getPlayHistoryDataTest() {
+//        init();
+//        assertNotNull(spotifyUtil.getPlayHistoryData());
+//    }
+//
+//    @Test
+//    @Disabled
+//    public void getPlayHistoryDataUnauthorizedTest() {
+//        SpotifyUtil spotifyUtil = new SpotifyUtil("WRONG_ID");
+//        assertNull(spotifyUtil.getPlayHistoryData());
+//    }
 
     @Test
     public void getUserTest() {
