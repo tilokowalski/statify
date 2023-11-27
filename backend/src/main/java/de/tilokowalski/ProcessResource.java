@@ -37,6 +37,8 @@ public class ProcessResource {
             List<User> users = db.get(currentUser, User.class);
             if (users.isEmpty()) {
                 db.store(currentUser);
+            } else {
+                return;
             }
         } catch (SurrealException e) {
             if (!(e instanceof SurrealRecordAlreadyExitsException)) {

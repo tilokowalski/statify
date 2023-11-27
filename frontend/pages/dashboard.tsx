@@ -2,6 +2,7 @@ import Genres from "../components/genres";
 import User from "../components/user";
 import { Surreal } from 'surrealdb.js';
 import { GetServerSideProps, NextPage } from "next";
+import Cookies from "cookies";
 
 const DB_ENDPOINT = "ws://127.0.0.1:8000/rpc"
 const DB_NAMESPACE = "statify";
@@ -25,20 +26,32 @@ const Dashboard: NextPage<DashboardProps> = ({ userData, genreData }) => {
 
 export default Dashboard;
 
-export const getServerSideProps: GetServerSideProps<DashboardProps> = async (context) => {
-    const accessToken = context.req.cookies['access_token'];
+export const getServerSideProps: GetServerSideProps<DashboardProps> = async ({ req, res }) => {
+    const cookies = new Cookies(req, res);
 
-    // const userId = userData.id;
-    const userId = "123456"; // TODO: Remove after testing
+    const accessToken = cookies.get('access_token');
+
+    if (accessToken === undefined) {
+        return {
+            redirect: {
+                destination: '/',
+                permanent: false,
+            },
+        };
+    }
 
     const userData = await fetchUserData(accessToken);
+
+    const userId = userData.id;
+
+    await registerUser(userId, accessToken);
+
     const genreData = await fetchGenreData(userId);
-    // const genreData: any = [];
 
     return { props: { userData, genreData } };
 };
 
-export async function fetchUserData(accessToken: string | undefined) {
+async function fetchUserData(accessToken: string | undefined) {
     const responseUserData = await fetch("https://api.spotify.com/v1/me", {
         method: 'GET',
         headers: {
@@ -53,7 +66,20 @@ export async function fetchUserData(accessToken: string | undefined) {
     return await responseUserData.json();
 }
 
-export async function fetchGenreData(userId: string) {
+async function registerUser(userId: string, accessToken: string) {
+    const response = await fetch("http://localhost:8080/process/" + userId, {
+        method: 'POST',
+        headers: {
+            'Authorization': accessToken
+        },
+    });
+
+    if (response.status != 204) {
+        throw new Error('Failed to register user');
+    }
+}
+
+async function fetchGenreData(userId: string) {
     try {
         await DB.connect(DB_ENDPOINT, {
             namespace: DB_NAMESPACE,
