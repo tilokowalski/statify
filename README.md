@@ -3,7 +3,11 @@
 </h1>
 
 <p align="center">
-    This project is a web platform for Spotify analytics, designed to provide users with insights into their listening habits. The platform offers features like top listened genres, artists, and a listening history calendar. Currently, we are working on MVP 1, which includes Spotify login integration and an overview of the proportional deviation of genres listened to in the last 30 days.
+    <img alt="Execute Quarkus Tests" src="https://github.com/tilokowalski/statify/actions/workflows/quarkus-test.yml/badge.svg">
+</p>
+
+<p align="center">
+    This project is a web platform for Spotify analytics, designed to provide users with insights into their listening habits. The platform offers features like top listened genres, artists, and a listening history calendar. Development started in November 2023 as project idea for a <a href="https://github.com/tilokowalski/hackathon-01">private hackathon</a>.
 </p>
 
 ## Technologies Used
@@ -11,11 +15,6 @@
 - **Backend:** Java with Quarkus
 - **Frontend:** Next.js (React)
 - **Database:** SurrealDB
-
-## MVP 1 Features
-
-- **Spotify Login Integration:** Users can log in via their Spotify account.
-- **Genre Deviation Analysis:** Shows the percentage deviation of genres a user has listened to within the last 30 days.
 
 ## Architecture
 
@@ -50,9 +49,7 @@
     npm run dev
     ```
 
-## Usage
-
-After setting up the project, users can log in using their Spotify account. The overview provides an overview of the genres they've listened to in the past 30 days and their proportional deviations.
+The application is now running on `localhost:3000`.
 
 ## License
 This project is licensed under Apache 2.0 - see [LICENSE](LICENSE) for details.
