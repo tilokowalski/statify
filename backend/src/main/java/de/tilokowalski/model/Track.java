@@ -1,6 +1,7 @@
 package de.tilokowalski.model;
 
-import de.tilokowalski.db.Record;
+import de.tilokowalski.db.Thing;
+import de.tilokowalski.db.RecordLink;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,9 +13,9 @@ import java.util.List;
  */
 @Getter
 @Setter
-public class Track extends Record {
+public class Track extends Thing {
 
-    private static final String TABLE_NAME = "track";
+    public static final String TABLE_NAME = "track";
 
 
     /**
@@ -25,8 +26,7 @@ public class Track extends Record {
     /**
      * The artists of the track.
      */
-    List<Artist> artists;
-
+    List<RecordLink<Artist>> artists;
 
     public Track(String recordId, String title) {
         this(recordId, title, new ArrayList<>());
@@ -39,13 +39,13 @@ public class Track extends Record {
      * @param title    The title of the track.
      * @param artists  The artists of the track.
      */
-    public Track(String recordId, String title, List<Artist> artists) {
+    public Track(String recordId, String title, List<RecordLink<Artist>> artists) {
         super(TABLE_NAME, recordId);
         this.title = title;
         this.artists = artists;
     }
 
     public void addArtists(Artist artist) {
-        artists.add(artist);
+        artists.add(RecordLink.create(artist));
     }
 }

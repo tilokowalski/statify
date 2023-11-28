@@ -2,25 +2,27 @@ package de.tilokowalski.model;
 
 import java.util.List;
 
-import de.tilokowalski.db.Record;
-import lombok.Builder;
-import lombok.Data;
+import de.tilokowalski.db.Thing;
 import lombok.Getter;
 import lombok.Setter;
 
 
 @Getter
-public class Artist extends Record {
+@Setter
+public class Artist extends Thing {
 
-    private static final String TABLE_NAME = "artist";
+    public static final String TABLE_NAME = "artist";
 
     /**
      * The genres of the artist.
      */
-    @Setter
     List<String> genres;
 
     String name;
+
+    public Artist(String recordId) {
+        this(recordId, null, null);
+    }
 
     public Artist(String recordId, String name) {
         this(recordId, name, null);

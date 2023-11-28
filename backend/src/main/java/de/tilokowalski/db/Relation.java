@@ -6,7 +6,7 @@ import lombok.NonNull;
  * A relation is an edge in the surreal graph database.
  * It is identified by a relation name and two records.
  */
-public abstract class Relation<T extends Record, R extends Record> {
+public abstract class Relation<T extends Thing, R extends Thing> {
 
     /**
      * The incoming side of the relation.

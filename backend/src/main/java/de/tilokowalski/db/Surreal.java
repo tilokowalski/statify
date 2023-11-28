@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.surrealdb.connection.SurrealConnection;
 import com.surrealdb.connection.SurrealWebSocketConnection;
+import com.surrealdb.connection.exception.SurrealException;
 import com.surrealdb.driver.SyncSurrealDriver;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -45,43 +46,52 @@ public class Surreal {
     /**
      * Stores a record in the surreal graph database.
      *
-     * @param record The record to store.
+     * @param thing The record to store.
      */
-    public Record store(Record record) {
-        return driver.create(record.getRecordIdentifier(), record);
+    public Thing store(Thing thing) {
+        return driver.create(thing.toString(), thing);
     }
 
-    public <T extends Record> List<T> get(String tableName, Class<T> recordType) {
+    public <T extends Thing> List<T> get(String tableName, Class<T> recordType) {
         return driver.select(tableName, recordType);
     }
 
 
-    public <T extends Record> List<T> get(String tableName, String recordId, Class<T> recordType) {
+    public <T extends Thing> List<T> get(String tableName, String recordId, Class<T> recordType) {
         return driver.select(tableName + ":" + recordId, recordType);
     }
 
-    public <T extends Record> List<T> get(T record, Class<T> recordType) {
-        return driver.select(record.getRecordIdentifier(), recordType);
+    public <T extends Thing> List<T> get(T record, Class<T> recordType) {
+        return driver.select(record.toString(), recordType);
     }
 
+
+    public <T extends Thing> void update(T record) {
+        driver.update(record.toString(), record);
+    }
     /**
      * Relates two records in the surreal graph database.
      *
      * @param relation The relation to store.
-     * @throws JsonProcessingException If the relation could not be serialized.
+     * @throws SurrealException If the relation could not be serialized.
      */
-    public void relate(Relation<?, ?> relation) throws JsonProcessingException {
-        String contentJson = mapper.writeValueAsString(relation);
+    public void relate(Relation<?, ?> relation) throws SurrealException {
+        try {
+            String contentJson = mapper.writeValueAsString(relation);
 
-        var query = String.format(
-                "RELATE %s->%s->%s CONTENT %s",
-                relation.in().getRecordIdentifier(),
-                relation.relationName(),
-                relation.out().getRecordIdentifier(),
-                contentJson
-        );
+            var query = String.format(
+                    "RELATE %s->%s->%s CONTENT %s",
+                    relation.in().toString(),
+                    relation.relationName(),
+                    relation.out().toString(),
+                    contentJson
+            );
 
-        driver.query(query, null, relation.getClass());
+            driver.query(query, null, relation.getClass());
+
+        } catch (JsonProcessingException e) {
+            throw new SurrealException("unable to serialize relation into json: " + e.getMessage());
+        }
     }
 
 }

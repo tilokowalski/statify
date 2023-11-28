@@ -1,6 +1,6 @@
 package de.tilokowalski.model;
 
-import de.tilokowalski.db.Record;
+import de.tilokowalski.db.Thing;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,9 +9,9 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class User extends Record {
+public class User extends Thing {
 
-    private static final String TABLE_NAME = "user";
+    public static final String TABLE_NAME = "user";
     /**
      * Creates a new user.
      *
