@@ -1,0 +1,4 @@
+surreal:
+  namespace: statify
+  database: statify
+

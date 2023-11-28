@@ -6,9 +6,11 @@ import com.surrealdb.connection.SurrealConnection;
 import com.surrealdb.connection.SurrealWebSocketConnection;
 import com.surrealdb.connection.exception.SurrealException;
 import com.surrealdb.driver.SyncSurrealDriver;
+import de.tilokowalski.db.config.SurrealConfig;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import lombok.extern.java.Log;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 /**
  * The surreal graph database connection, wrapped into a singleton object.
@@ -18,6 +20,7 @@ import java.util.List;
 @Singleton
 @Log
 public class Surreal {
+
 
     /**
      * The surreal driver is used to communicate with the surreal graph database.
@@ -33,14 +36,14 @@ public class Surreal {
     /**
      * Creates the surreal graph database connection.
      */
-    private Surreal() {
-        SurrealConnection connection = new SurrealWebSocketConnection("127.0.0.1", 8000, false);
+    private Surreal(SurrealConfig config) {
+        SurrealConnection connection = new SurrealWebSocketConnection(config.host(), config.port(), false);
         connection.connect(30); // timeout after 30 seconds
 
         driver = new SyncSurrealDriver(connection);
 
-        driver.signIn("root", "root"); // username & password
-        driver.use("statify", "statify"); // namespace & database
+        driver.signIn(config.username(), config.password()); // username & password
+        driver.use(config.namespace(), config.database()); // namespace & database
     }
 
     /**
@@ -69,6 +72,7 @@ public class Surreal {
     public <T extends Thing> void update(T record) {
         driver.update(record.toString(), record);
     }
+
     /**
      * Relates two records in the surreal graph database.
      *
