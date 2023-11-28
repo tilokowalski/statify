@@ -3,6 +3,8 @@ package de.tilokowalski.db;
 import de.tilokowalski.model.Listens;
 import de.tilokowalski.model.Track;
 import de.tilokowalski.model.User;
+import io.quarkus.test.common.QuarkusTestResource;
+import io.quarkus.test.junit.QuarkusIntegrationTest;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
 import java.time.LocalDateTime;
@@ -13,6 +15,7 @@ import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+@QuarkusTestResource(SurrealContainer.class)
 @QuarkusTest
 class SurrealTest {
 
