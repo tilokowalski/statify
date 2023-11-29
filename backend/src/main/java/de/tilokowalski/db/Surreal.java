@@ -7,20 +7,18 @@ import com.surrealdb.connection.SurrealWebSocketConnection;
 import com.surrealdb.connection.exception.SurrealException;
 import com.surrealdb.driver.SyncSurrealDriver;
 import de.tilokowalski.db.config.SurrealConfig;
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
 import lombok.extern.java.Log;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 /**
  * The surreal graph database connection, wrapped into a singleton object.
  */
 import java.util.List;
 
-@Singleton
+@ApplicationScoped
 @Log
 public class Surreal {
-
 
     /**
      * The surreal driver is used to communicate with the surreal graph database.
@@ -59,7 +57,6 @@ public class Surreal {
         return driver.select(tableName, recordType);
     }
 
-
     public <T extends Thing> List<T> get(String tableName, String recordId, Class<T> recordType) {
         return driver.select(tableName + ":" + recordId, recordType);
     }
@@ -67,7 +64,6 @@ public class Surreal {
     public <T extends Thing> List<T> get(T record, Class<T> recordType) {
         return driver.select(record.toString(), recordType);
     }
-
 
     public <T extends Thing> void update(T record) {
         driver.update(record.toString(), record);
@@ -88,8 +84,7 @@ public class Surreal {
                     relation.in().toString(),
                     relation.relationName(),
                     relation.out().toString(),
-                    contentJson
-            );
+                    contentJson);
 
             driver.query(query, null, relation.getClass());
 
