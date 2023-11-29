@@ -103,13 +103,13 @@ async function fetchGenreData(userId: string): Promise<GenreDataProps[]> {
   }
 
   try {
-    const genres = await DB.query<[string]>(`
-            SELECT VALUE array::group(->listens->track.artists.genres) FROM ONLY $user_id;
+    const [genres] = await DB.query<[{ flattened: string[], distinct: string[] }]>(`
+            SELECT array::flatten(genres) as flattened, array::group(genres) as distinct FROM ONLY (SELECT ->listens->track.artists.genres as genres FROM ONLY $user_id)
         `, { user_id: "user:" + userId });
 
     const genreData: GenreDataProps[] = [];
 
-    const promises = genres.map(async (genre: string) => {
+    const promises = genres.distinct.map(async (genre: string) => {
       let result = await DB.query<[{ number_of_tracks_per_genre: number, percentage: number }]>(`
                 SELECT 
                     array::len(genre_filter) as number_of_tracks_per_genre,
@@ -117,14 +117,17 @@ async function fetchGenreData(userId: string): Promise<GenreDataProps[]> {
                     count(genres) as total 
                 FROM ONLY 
                     {genre_filter: array::filter_index($genres, $genre_to_search), genres: $genres};
-            `, { genre_to_search: genre, user_id: "user:" + userId, genres: genres });
+            `, { genre_to_search: genre, user_id: "user:" + userId, genres: genres.flattened });
 
+      if (genre == null) {
+        genre = "undefined"
+      }
 
       return { genre: genre, percentage: result[0].percentage };
     });
 
-    return Promise.all(promises).then((percentages) => {
-      genreData.push(...percentages);
+    return Promise.all(promises).then((queryResults) => {
+      genreData.push(...queryResults);
       return genreData;
     });
   } catch (err) {
