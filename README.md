@@ -3,10 +3,6 @@
 </h1>
 
 <p align="center">
-    <img alt="Execute Quarkus Tests" src="https://github.com/tilokowalski/statify/actions/workflows/quarkus-test.yml/badge.svg">
-</p>
-
-<p align="center">
     This project is a web platform for Spotify analytics, designed to provide users with insights into their listening habits. The platform offers features like top listened genres, artists, and a listening history calendar. Development started in November 2023 as project idea for a <a href="https://github.com/tilokowalski/hackathon-01">private hackathon</a>.
 </p>
 
