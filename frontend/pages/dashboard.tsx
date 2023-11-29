@@ -3,7 +3,7 @@ import User from "../components/user";
 import { Surreal } from 'surrealdb.js';
 import { GetServerSideProps, NextPage } from "next";
 import Cookies from "cookies";
-import { RawQueryResult } from "surrealdb.js/script/types";
+import Box from "@mui/material/Box";
 
 const DB_ENDPOINT = "ws://127.0.0.1:8000/rpc"
 const DB_NAMESPACE = "statify";
@@ -18,10 +18,10 @@ type DashboardProps = {
 
 const Dashboard: NextPage<DashboardProps> = props => {
   return (
-    <div>
+    <Box>
       <User userData={props.userData} />
       <Genres genreData={props.genreData} />
-    </div>
+    </Box>
   );
 };
 
