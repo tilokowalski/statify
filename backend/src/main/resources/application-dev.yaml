@@ -1,0 +1,5 @@
+surreal:
+  password: root
+  username: root
+  host: localhost
+  port: 8000
